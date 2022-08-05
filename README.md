@@ -22,5 +22,8 @@ How to run
 1. Clone repo
 2. Open files using editor, such as VS code
 
+Or you can use this link:
+https://dtlyeung.github.io/Daily-scheduler/
+
 Credits
 Source Code for Project from : https://github.com/coding-boot-camp/super-disco
