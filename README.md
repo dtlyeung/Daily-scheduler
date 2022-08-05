@@ -1,6 +1,6 @@
 # Daily-scheduler
 
-##Project Desciption
+Project Desciption
 
 This is a simple day planner to help schedule and keep track of different tasks throughout the day, during work hours (0900 to 1700).
 It is colour coded to help easily identify which tasks are of immediate concern, following the system described below. The tasks are then stored
@@ -18,6 +18,9 @@ This application was built with:
   - JQuery
   - moment.js
   
-##How to run
+How to run
 1. Clone repo
 2. Open files using editor, such as VS code
+
+Credits
+Source Code for Project from : https://github.com/coding-boot-camp/super-disco
