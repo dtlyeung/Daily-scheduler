@@ -7,9 +7,9 @@ It is colour coded to help easily identify which tasks are of immediate concern,
 in localStorage, so that they can checked later in the day as well.
 
 Colour guide:
-Grey - Task has passed
-Red - Tasks scheduled for current hour
-Green - Tasks scheduled for future times
+  - Grey - Task has passed
+  - Red - Tasks scheduled for current hour
+  - Green - Tasks scheduled for future times
 
 This application was built with:
   - HTML
