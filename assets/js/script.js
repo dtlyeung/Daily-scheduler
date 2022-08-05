@@ -1,101 +1,112 @@
-//variables for hour blocks (24hour clock)
-var dayplan = [
-    {
-        hour: "0",
-        time: "09",
-        miltime: "09",
-        meridiem: "am",
-        task: ""
-    },
-    {
-        hour: "1",
-        time: "10",
-        miltime: "10",
-        meridiem: "am",
-        task: ""
-    },
-    {
-        hour: "2",
-        time: "11",
-        miltime: "11",
-        meridiem: "am",
-        task: ""
-    },
-    {
-        hour: "3",
-        time: "12",
-        miltime: "12",
-        meridiem: "pm",
-        task: ""
-    },
-    {
-        hour: "4",
-        time: "01",
-        miltime: "13",
-        meridiem: "pm",
-        task: ""
-    },
-    {
-        hour: "5",
-        time: "02",
-        miltime: "14",
-        meridiem: "pm",
-        task: ""
-    },
-    {
-        hour: "6",
-        time: "03",
-        miltime: "15",
-        meridiem: "pm",
-        task: ""
-    },
-    {
-        hour: "7",
-        time: "04",
-        miltime: "16",
-        meridiem: "pm",
-        task: ""
-    },
-    {
-        hour: "8",
-        time: "05",
-        miltime: "17",
-        meridiem: "pm",
-        task: ""
-    },     
+var hourblock = document.getElementById("hourblock");
+var currentDay = document.getElementById("currentDay");
+
+//Display current date and time
+function displaytime(){
+    var date = moment().format('MMMM Do YYYY');
+    currentDay.innerHTML = date;
+    currentDay.innerHTML = "Today: " + date;
+}
+setInterval(displaytime, 1000);
+
+let hours = [
+    "0900",
+    "1000",
+    "1100",
+    "1200",
+    "1300",
+    "1400",
+    "1500",
+    "1600",
+    "1700",
 ]
 
-//Date at top
-function headerdate(){
-    var currentdate = moment().format('dddd, MMMM Do');
-    $("#currentDay").text(currentdate);
-}
+//Make time blocks
+timeblocks();
+function timeblocks(){
+    hourblock.innerHTML = "";
 
-//save date to localstorage
-function savedtasks(){
-    localStorage.setItem("plannedDay", JSON.stringify(plannedDay));
-}
+    for (var i = 0; i < hours.length; i++){
+        var hourRows = hours[i];
 
-//
-function displaytasks(){
-    plannedDay.foreach(function (currenthour){
-        $(`#${currenthour.id}`).val(currenthour.reminder);
-    })
-}
+        var row = document.createElement("div");
+        row.classList.add("row");
+        hourblock.appendChild(row);
 
-//
-function init(){
-    var savedDay = JSON.parse(localStorage.getItem("plannedDay"));
+        var hour = document.createElement("div");
+        hour.innerHTML = hourRows;
+        hour.classList.add("hour");
+        row.appendChild(hour);
 
-    if (savedDay){
-        plannedDay = savedDay;
+        var taskbox = document.createElement("textarea");
+        taskbox.setAttribute("class", "description");
+        taskbox.setAttribute("id", i);
+        row.appendChild(taskbox);
+
+        var saveButton = document.createElement("button");
+        saveButton.textContent = "Save";
+        saveButton.classList.add("saveBtn");
+        saveButton.setAttribute("value", i);
+        row.appendChild(saveButton);
     }
-
-    taskreminder();
-    plannedDay();
 }
 
-//Header date
-headerdate();
+// Save task to localStorage
+$(document).on('click','.saveButton',function(){
+    var savedtask = $(this).val();
+    var taskdetails = document.getElementById(savedtask).value;
+    localStorage.setItem(savedtask, taskdetails);
+});
 
-//Scheduler body
+// Load saved tasks from localStorage
+function retrieveTasks(){
+    for (var i = 0; i < hours.length; i++){
+        var retrievetasks = localStorage.getItem(i);
+        var texts = document.getElementById(i);
+        texts.innerText = retrievetasks;
+    }
+}
+retrieveTasks();
+
+// Clear saved tasks
+function clearTasks(){
+    var clearConfirm = confirm("Would you like to clear your schedule?")
+    var storedtasks = document.getElementsByClassName("description")
+
+    if (clearConfirm === true){
+        for (var i = 0; i < storedtasks.length; i++){
+            localStorage.removeItem(i);
+        }
+        storedtasks.innerText = "";
+        timeblocks();
+        changecolour();
+    }
+}
+
+//Update hour block colours based on past, present, future time
+function changecolour(){
+    var presenttime = moment().format('h a');
+    var presenthour = moment(presenttime, 'h a');
+    var details = document.getElementsByClassName("description")
+
+    for (var i = 0; i < details.length; i ++){
+        var hourbox = moment(hours[i], 'h a');
+        if (presenthour.isSame(hourbox) === true){
+            details[i].classList.remove('past')
+            details[i].classList.add('present')
+            details[i].classList.remove('future')
+        }
+        else if (presenthour.isBefore(hourbox) === true){
+            details[i].classList.remove('past')
+            details[i].classList.remove('present')
+            details[i].classList.add('future')
+        }
+        else if (presenthour.isAfter(hourbox) === true){
+            details[i].classList.add('past')
+            details[i].classList.remove('present')
+            details[i].classList.remove('future')
+        }
+    }
+}
+changecolour()
+setInterval(displaytime, 1000);
